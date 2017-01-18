@@ -1,0 +1,8 @@
+*.*~
+*.DS_Store
+
+# Distribution/Packaging
+env/
+vars/
+build/
+
