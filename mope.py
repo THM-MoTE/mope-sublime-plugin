@@ -3,14 +3,33 @@
 import sublime
 import sublime_plugin
 
-from .mope_common import *
+import os.path as path
 
-class MopeConnectCommand(MopeCommon):
+from .mope_common import *
+from .mope_client import *
+
+mopeProjectFile = "mope-project.json"
+mopeClient = MopeClient()
+
+class MopeConnectCommand(sublime_plugin.WindowCommand):
 	def __init__(self, window):
-		super(MopeCommon, self).__init__(window)
+		self.window = window
+		self.settings = sublime.load_settings("Mope.sublime-settings")
+		self.interface = self.settings.get("interface")
+		self.port = self.settings.get("port")
+
 
 	def run(self):
-		print("NOT IMPLEMENTED: Connecting to %s:%d" % (super(MopeCommon, self).get_interface(), super(MopeCommon, self).get_port()))
+		print("NOT IMPLEMENTED: Connecting to %s:%d" % (self.interface, self.port))
+		openedFolders = self.window.folders()
+		if len(openedFolders) != 1:
+			sublime.error_message("Can't handle multiple project roots! Please open only 1 directory")
+		else:
+			root = openedFolders[0]
+			projectFile = path.join(root, mopeProjectFile)
+			json = read_project_file(root, projectFile)
+			info("json: "+json)
+			mopeClient.connect(self.interface, self.port, json)
 
 class MopeCompileProjectommand(MopeCommon):
 	def __init__(self, window):
