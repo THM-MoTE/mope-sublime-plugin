@@ -1,0 +1,19 @@
+//Mope commands for Command Palette
+[
+  {
+  	"caption": "Mope: Connect",
+  	"command": "mope_connect"
+	},
+	  {
+  	"caption": "Mope: Compile Project",
+  	"command": "mope_compile_project"
+	},
+	  {
+  	"caption": "Mope: Open Documentation",
+  	"command": "mope_open_documentation"
+	},
+	  {
+  	"caption": "Mope: Show Type",
+  	"command": "mope_show_type"
+	}
+]

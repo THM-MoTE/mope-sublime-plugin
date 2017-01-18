@@ -1,0 +1,8 @@
+//Package settings for Mope
+{
+	"interface": "localhost",
+	"port": 9001,
+	"mope_exec": "~/mope.jar",
+	"java_exec": "/usr/bin/java",
+	"start_server": false
+}
