@@ -1,6 +1,9 @@
+import sublime
 import json
+import urllib.request as request
 
 from .logging import *
+from .http_utils import *
 
 class MopeClient:
 	def __init__(self):
@@ -8,12 +11,19 @@ class MopeClient:
 		self.port = 0
 		self.connected = False
 
+	def baseUrl(self):
+		return "%s:%d/mope"%(self.interface, self.port)
+		#return self.interface+":%d"%(self.port)+"/mope"
+
 	def connect(self, interface, port, projectJson):
 		debug("Client#connect called with %s %d %s" % (interface, port, projectJson))
-		self.interface = interface
+		self.interface = "http://"+interface
 		self.port = port
 		self.connected = True
-	
+		sResp = json_request(self.baseUrl()+"/connect", projectJson)
+		self.projectId = int(sResp.content)
+		debug("proj id: "+str(self.projectId))
+
 	def disconnect(self):
 		self.connected = False
 

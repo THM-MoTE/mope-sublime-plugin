@@ -20,7 +20,6 @@ class MopeConnectCommand(sublime_plugin.WindowCommand):
 		self.port = self.settings.get("port")
 
 	def run(self):
-		print("NOT IMPLEMENTED: Connecting to %s:%d" % (self.interface, self.port))
 		openedFolders = self.window.folders()
 		if len(openedFolders) != 1:
 			sublime.error_message("Can't handle multiple project roots! Please open only 1 directory")
@@ -29,7 +28,12 @@ class MopeConnectCommand(sublime_plugin.WindowCommand):
 			projectFile = path.join(root, mopeProjectFile)
 			json = read_project_file(root, projectFile)
 			info("json: "+json)
-			mopeClient.connect(self.interface, self.port, json)
+			try:
+				mopeClient.connect(self.interface, self.port, json)
+				sublime.message_dialog("Connected to %ss:%d"%(self.interface,self.port))
+			except request.URLError:
+				sublime.error_message("Couldn't connect to %s:%d!"%(self.interface, self.port))
+
 
 class MopeCompileProjectCommand(sublime_plugin.WindowCommand):
 	def __init__(self, window):
