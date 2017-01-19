@@ -6,6 +6,9 @@ class SimpleRequest():
 		self.statusCode = code
 		self.content = body
 
+	def content_as_map(self):
+		return json.loads(self.content)
+
 def json_request(url, json):
 	requ = request.Request(url, data=json.encode(), headers={"Content-Type": "application/json"}, method="POST")
 	resp = request.urlopen(requ)
