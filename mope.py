@@ -86,6 +86,7 @@ class MopeOpenDocumentationCommand(sublime_plugin.WindowCommand):
 		wordStr = activeView.substr(wordRegion)
 		debug("found word "+wordStr)
 		mopeClient.openDocumentation(wordStr)
+		Modelica.Electrical.Basic
 
 class MopeShowTypeCommand(MopeCommon):
 	def __init__(self, window):

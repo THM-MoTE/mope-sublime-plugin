@@ -1,5 +1,6 @@
 import sublime
 import json
+import webbrowser
 import urllib.request as request
 
 from .logging import *
@@ -13,7 +14,9 @@ class MopeClient:
 
 	def baseUrl(self):
 		return "%s:%d/mope"%(self.interface, self.port)
-		#return self.interface+":%d"%(self.port)+"/mope"
+
+	def projectUrl(self):
+		return self.baseUrl()+"/project/"+str(self.projectId)
 
 	def connect(self, interface, port, projectJson):
 		debug("Client#connect called with %s %d %s" % (interface, port, projectJson))
@@ -38,5 +41,6 @@ class MopeClient:
 	def openDocumentation(self, model):
 		#TODO add project uri
 		if self.isConnected():
-			uri = "/doc?class=%s"%(model)
+			uri = self.projectUrl()+"/doc?class=%s"%(model)
 			info("documentation for "+model+" at "+uri)
+			webbrowser.open(uri)
