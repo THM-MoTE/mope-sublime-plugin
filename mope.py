@@ -43,20 +43,31 @@ class MopeCompileProjectCommand(sublime_plugin.WindowCommand):
 		print("WARNING compile project not implemented!")
 		openFile = self.window.active_view().file_name()
 		debug("opened file: "+openFile)
-		mopeClient.compile(openFile)
+		compilerErrors = mopeClient.compile(openFile)
 		infoPanelView = self.window.create_output_panel("mopeInfoPanel", True)
 		infoPanelView.set_read_only(False)
 		#edit the panel
-		infoPanelView.run_command("mope_update_info_panel", {"dataMap": {}})
+		infoPanelView.run_command("mope_display_errors", {"errors": compilerErrors})
 		infoPanelView.set_read_only(True)
 		self.window.run_command("show_panel", {"panel": "output.mopeInfoPanel"})
 		#self.window.run_command("hide_panel", {"panel": "output.mopeInfoPanel"})
 
-class MopeUpdateInfoPanelCommand(sublime_plugin.TextCommand):
-	def run(self, edit, dataMap):
+class MopeDisplayErrorsCommand(sublime_plugin.TextCommand):
+	def run(self, edit, errors):
 		infoPanelView = self.view
-		#self.view.window().message_dialog("upd")
-		infoPanelView.insert(edit, 0, "this is a test")
+
+		def toStringMapping(error):
+			return "[{}] {} {}:{} - {}:{} {}".format(
+				error["type"].capitalize(),
+				error["file"],
+				error["start"]["line"],
+				error["start"]["column"],
+				error["end"]["line"],
+				error["end"]["column"],
+				error["message"])
+
+		errorLines = "\n".join(map(toStringMapping, errors))
+		infoPanelView.insert(edit,0,errorLines)
 
 
 class MopeEvListener(sublime_plugin.EventListener):

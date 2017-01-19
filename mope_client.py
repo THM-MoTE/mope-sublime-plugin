@@ -36,7 +36,8 @@ class MopeClient:
 	def compile(self, file):
 		if self.isConnected():
 			jsData = json.dumps({"path": file})
-			info("compiling with "+jsData)
+			sResp = json_request(self.projectUrl()+"/compile", jsData)
+			return sResp.content_as_map()
 
 	def openDocumentation(self, model):
 		#TODO add project uri
