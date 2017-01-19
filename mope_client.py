@@ -1,3 +1,5 @@
+import json
+
 from .logging import *
 
 class MopeClient:
@@ -17,3 +19,8 @@ class MopeClient:
 
 	def isConnected(self):
 		return self.connected
+
+	def compile(self, file):
+		if self.isConnected():
+			jsData = json.dumps({"path": file})
+			info("compiling with "+jsData)

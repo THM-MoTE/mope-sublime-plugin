@@ -5,6 +5,7 @@ import sublime_plugin
 
 import os.path as path
 
+from .logging import *
 from .mope_common import *
 from .mope_client import *
 
@@ -18,7 +19,6 @@ class MopeConnectCommand(sublime_plugin.WindowCommand):
 		self.interface = self.settings.get("interface")
 		self.port = self.settings.get("port")
 
-
 	def run(self):
 		print("NOT IMPLEMENTED: Connecting to %s:%d" % (self.interface, self.port))
 		openedFolders = self.window.folders()
@@ -31,13 +31,21 @@ class MopeConnectCommand(sublime_plugin.WindowCommand):
 			info("json: "+json)
 			mopeClient.connect(self.interface, self.port, json)
 
-class MopeCompileProjectommand(MopeCommon):
+class MopeCompileProjectCommand(sublime_plugin.WindowCommand):
 	def __init__(self, window):
-		super(MopeCommon, self).__init__(window)
-		pass
+		self.window = window
 
 	def run(self):
 		print("WARNING compile project not implemented!")
+		openFile = self.window.active_view().file_name()
+		debug("opened file: "+openFile)
+		mopeClient.compile(openFile)
+
+class MopeEvListener(sublime_plugin.EventListener):
+	def on_post_save_async(self, view):
+		openFile = view.file_name()
+		debug("saved the file: "+openFile)
+		mopeClient.compile(openFile)
 
 class MopeOpenDocumentationCommand(MopeCommon):
 	def __init__(self, window):
