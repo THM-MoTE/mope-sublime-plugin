@@ -24,3 +24,9 @@ class MopeClient:
 		if self.isConnected():
 			jsData = json.dumps({"path": file})
 			info("compiling with "+jsData)
+
+	def openDocumentation(self, model):
+		#TODO add project uri
+		if self.isConnected():
+			uri = "/doc?class=%s"%(model)
+			info("documentation for "+model+" at "+uri)

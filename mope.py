@@ -55,13 +55,19 @@ class MopeEvListener(sublime_plugin.EventListener):
 			["Electrical\tThe electrical lib", "Modelica"]
 		]
 
-class MopeOpenDocumentationCommand(MopeCommon):
+class MopeOpenDocumentationCommand(sublime_plugin.WindowCommand):
 	def __init__(self, window):
-		super(MopeCommon, self).__init__(window)
-		pass
+		self.window = window
 
 	def run(self):
 		print("WARNING open documentation not implemented!")
+		activeView = self.window.active_view()
+		cursorRegion = activeView.sel()[0]
+		#debug("cursor is at: "+str(cursorPos))
+		wordRegion = activeView.word(cursorRegion)
+		wordStr = activeView.substr(wordRegion)
+		debug("found word "+wordStr)
+		mopeClient.openDocumentation(wordStr)
 
 class MopeShowTypeCommand(MopeCommon):
 	def __init__(self, window):
