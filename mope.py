@@ -43,9 +43,17 @@ class MopeCompileProjectCommand(sublime_plugin.WindowCommand):
 
 class MopeEvListener(sublime_plugin.EventListener):
 	def on_post_save_async(self, view):
+		#TODO check if it's a modelica file/restrict execution to Modelica scope
 		openFile = view.file_name()
 		debug("saved the file: "+openFile)
 		mopeClient.compile(openFile)
+
+	def on_query_completions(self, view, prefix, locations):
+		#called when a completion is requested (Ctrl+Space)
+		return [
+			["Modelica\tThe std lib", "Modelica"],
+			["Electrical\tThe electrical lib", "Modelica"]
+		]
 
 class MopeOpenDocumentationCommand(MopeCommon):
 	def __init__(self, window):
