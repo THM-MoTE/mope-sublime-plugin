@@ -12,6 +12,18 @@ from .mope_client import *
 mopeProjectFile = "mope-project.json"
 mopeClient = MopeClient()
 
+def compileAndDisplayErrors(window):
+	openFile = window.active_view().file_name()
+	log.debug("opened file: "+openFile)
+	compilerErrors = mopeClient.compile(openFile)
+	infoPanelView = window.create_output_panel("mopeInfoPanel", True)
+	infoPanelView.set_read_only(False)
+	#edit the panel
+	infoPanelView.run_command("mope_display_errors", {"errors": compilerErrors})
+	infoPanelView.set_read_only(True)
+	window.run_command("show_panel", {"panel": "output.mopeInfoPanel"})
+	#self.window.run_command("hide_panel", {"panel": "output.mopeInfoPanel"})
+
 class MopeConnectCommand(sublime_plugin.WindowCommand):
 	def __init__(self, window):
 		self.window = window
@@ -48,17 +60,8 @@ class MopeCompileProjectCommand(sublime_plugin.WindowCommand):
 
 	def run(self):
 		if isModelica():
-			print("WARNING compile project not implemented!")
-			openFile = self.window.active_view().file_name()
-			log.debug("opened file: "+openFile)
-			compilerErrors = mopeClient.compile(openFile)
-			infoPanelView = self.window.create_output_panel("mopeInfoPanel", True)
-			infoPanelView.set_read_only(False)
-			#edit the panel
-			infoPanelView.run_command("mope_display_errors", {"errors": compilerErrors})
-			infoPanelView.set_read_only(True)
-			self.window.run_command("show_panel", {"panel": "output.mopeInfoPanel"})
-			#self.window.run_command("hide_panel", {"panel": "output.mopeInfoPanel"})
+			compileAndDisplayErrors(self.window)
+
 
 class MopeDisplayErrorsCommand(sublime_plugin.TextCommand):
 	def run(self, edit, errors):
@@ -83,7 +86,7 @@ class MopeEvListener(sublime_plugin.EventListener):
 		if isModelica():
 			openFile = view.file_name()
 			log.debug("saved the file: "+openFile)
-			mopeClient.compile(openFile)
+			compileAndDisplayErrors(view.window())
 
 	def on_query_completions(self, view, prefix, locations):
 		#called when a completion is requested (Ctrl+Space)
