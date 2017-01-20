@@ -38,5 +38,8 @@ def read_project_file(rootDir, projectFile):
 			return jsonStr
 
 def isModelica():
-	openedFile = sublime.active_window().active_view().file_name()
+	openedFile = currentFile()
 	return openedFile.endswith(".mo")
+
+def currentFile():
+	return sublime.active_window().active_view().file_name()
