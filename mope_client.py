@@ -28,7 +28,12 @@ class MopeClient:
 		log.debug("proj id: "+str(self.projectId))
 
 	def disconnect(self):
-		self.connected = False
+		if self.isConnected():
+			self.connected = False
+			requ = request.Request(self.projectUrl()+"/disconnect", method="POST")
+			resp = request.urlopen(requ)
+			log.info("disconnecting returned: {}".format(resp.getcode()))
+
 
 	def isConnected(self):
 		return self.connected

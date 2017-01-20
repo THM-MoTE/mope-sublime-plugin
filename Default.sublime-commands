@@ -4,6 +4,10 @@
   	"caption": "Mope: Connect",
   	"command": "mope_connect"
 	},
+    {
+    "caption": "Mope: Disconnect",
+    "command": "mope_disconnect"
+  },
 	  {
   	"caption": "Mope: Compile Project",
   	"command": "mope_compile_project"

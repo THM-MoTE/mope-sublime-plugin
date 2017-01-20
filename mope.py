@@ -34,6 +34,13 @@ class MopeConnectCommand(sublime_plugin.WindowCommand):
 			except request.URLError:
 				sublime.error_message("Couldn't connect to %s:%d!"%(self.interface, self.port))
 
+class MopeDisconnectCommand(sublime_plugin.WindowCommand):
+	def __init__(self, window):
+		self.window = window
+
+	def run(self):
+		mopeClient.disconnect()
+		sublime.message_dialog("MoPE Disconnected")
 
 class MopeCompileProjectCommand(sublime_plugin.WindowCommand):
 	def __init__(self, window):
