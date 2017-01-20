@@ -6,7 +6,7 @@ import sublime_plugin
 import os.path as path
 import json
 
-from .logging import *
+from .logger import *
 
 class MopeCommon(sublime_plugin.WindowCommand):
 		def __init__(self, window):
@@ -25,12 +25,12 @@ class MopeCommon(sublime_plugin.WindowCommand):
 def read_project_file(rootDir, projectFile):
 	if path.exists(projectFile):
 		#read file and convert into map/json object
-		debug("project file exists")
+		log.debug("project file exists")
 		with open(projectFile, "r") as file:
 			return file.read()
 	else:
 		#create file with project informations
-		warn("project file doesn't exist")
+		log.warn("project file doesn't exist")
 		with open(projectFile, "w") as file:
 			data = { "path": rootDir, "outputDirectory": "target" }
 			jsonStr = json.dumps(data, indent=2)

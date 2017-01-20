@@ -3,7 +3,7 @@ import json
 import webbrowser
 import urllib.request as request
 
-from .logging import *
+from .logger import *
 from .http_utils import *
 
 class MopeClient:
@@ -19,13 +19,13 @@ class MopeClient:
 		return self.baseUrl()+"/project/"+str(self.projectId)
 
 	def connect(self, interface, port, projectJson):
-		debug("Client#connect called with %s %d %s" % (interface, port, projectJson))
+		log.debug("Client#connect called with %s %d %s" % (interface, port, projectJson))
 		self.interface = "http://"+interface
 		self.port = port
 		self.connected = True
 		sResp = json_request(self.baseUrl()+"/connect", projectJson)
 		self.projectId = int(sResp.content)
-		debug("proj id: "+str(self.projectId))
+		log.debug("proj id: "+str(self.projectId))
 
 	def disconnect(self):
 		self.connected = False
@@ -43,5 +43,5 @@ class MopeClient:
 		#TODO add project uri
 		if self.isConnected():
 			uri = self.projectUrl()+"/doc?class=%s"%(model)
-			info("documentation for "+model+" at "+uri)
+			log.info("documentation for "+model+" at "+uri)
 			webbrowser.open(uri)

@@ -5,7 +5,7 @@ import sublime_plugin
 
 import os.path as path
 
-from .logging import *
+from .logger import *
 from .mope_common import *
 from .mope_client import *
 
@@ -27,7 +27,7 @@ class MopeConnectCommand(sublime_plugin.WindowCommand):
 			root = openedFolders[0]
 			projectFile = path.join(root, mopeProjectFile)
 			json = read_project_file(root, projectFile)
-			info("json: "+json)
+			log.info("json: "+json)
 			try:
 				mopeClient.connect(self.interface, self.port, json)
 				sublime.message_dialog("Connected to %ss:%d"%(self.interface,self.port))
@@ -42,7 +42,7 @@ class MopeCompileProjectCommand(sublime_plugin.WindowCommand):
 	def run(self):
 		print("WARNING compile project not implemented!")
 		openFile = self.window.active_view().file_name()
-		debug("opened file: "+openFile)
+		log.debug("opened file: "+openFile)
 		compilerErrors = mopeClient.compile(openFile)
 		infoPanelView = self.window.create_output_panel("mopeInfoPanel", True)
 		infoPanelView.set_read_only(False)
@@ -74,7 +74,7 @@ class MopeEvListener(sublime_plugin.EventListener):
 	def on_post_save_async(self, view):
 		#TODO check if it's a modelica file/restrict execution to Modelica scope
 		openFile = view.file_name()
-		debug("saved the file: "+openFile)
+		log.debug("saved the file: "+openFile)
 		mopeClient.compile(openFile)
 
 	def on_query_completions(self, view, prefix, locations):
@@ -92,10 +92,9 @@ class MopeOpenDocumentationCommand(sublime_plugin.WindowCommand):
 		print("WARNING open documentation not implemented!")
 		activeView = self.window.active_view()
 		cursorRegion = activeView.sel()[0]
-		#debug("cursor is at: "+str(cursorPos))
 		wordRegion = activeView.word(cursorRegion)
 		wordStr = activeView.substr(wordRegion)
-		debug("found word "+wordStr)
+		log.debug("found word "+wordStr)
 		mopeClient.openDocumentation(wordStr)
 		Modelica.Electrical.Basic
 
