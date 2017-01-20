@@ -94,6 +94,11 @@ class MopeEvListener(sublime_plugin.EventListener):
 			]
 		else:
 			return None
+	def on_window_command(self, window, cmdName,  args):
+		# disconnect if user closes the window
+		if cmdName == "close_window":
+			mopeClient.disconnect()
+
 
 class MopeOpenDocumentationCommand(sublime_plugin.WindowCommand):
 	def __init__(self, window):
