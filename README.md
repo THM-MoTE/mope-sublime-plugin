@@ -2,3 +2,6 @@
 
 A client plugin for Sublime Text for communicating with the [Modelica | Editor](https://github.com/THM-MoTE/mope-server/)
 service process.
+
+# Requirements
+- The [Modelica](https://packagecontrol.io/packages/Modelica) syntax package
