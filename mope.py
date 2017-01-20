@@ -62,7 +62,6 @@ class MopeCompileProjectCommand(sublime_plugin.WindowCommand):
 		if isModelica():
 			compileAndDisplayErrors(self.window)
 
-
 class MopeDisplayErrorsCommand(sublime_plugin.TextCommand):
 	def run(self, edit, errors):
 		infoPanelView = self.view
@@ -88,13 +87,28 @@ class MopeEvListener(sublime_plugin.EventListener):
 			log.debug("saved the file: "+openFile)
 			compileAndDisplayErrors(view.window())
 
+	def mapSuggestions(self, suggestions):
+		#log.debug("suggestions: "+str(suggestions))
+		def mapping(suggestion):
+			log.debug(suggestion)
+			if suggestion["classComment"] is not None:
+				return [suggestion["name"]+"\t"+suggestion["classComment"], suggestion["name"]]	
+			else:
+				return [suggestion["name"], suggestion["name"]]
+
+		return [mapping(x) for x in suggestions]
+
 	def on_query_completions(self, view, prefix, locations):
 		#called when a completion is requested (Ctrl+Space)
 		if isModelica():
-			return [
-				["Modelica\tThe std lib", "Modelica"],
-				["Electrical\tThe electrical lib", "Modelica"]
-			]
+			for point in locations:
+				if view.match_selector(point, "source.modelica"):
+					#TODO match full prefix instead of given prefix; the given prefix only contains words until a '.' appears
+					row, col = view.rowcol(point) #0-based position
+					line = row+1
+					column = col+1
+					suggestions = mopeClient.getCompletions(currentFile(), line, column, prefix)
+					return self.mapSuggestions(suggestions)
 		else:
 			return None
 	def on_window_command(self, window, cmdName,  args):

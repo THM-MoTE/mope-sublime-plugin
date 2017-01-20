@@ -44,6 +44,21 @@ class MopeClient:
 			sResp = json_request(self.projectUrl()+"/compile", jsData)
 			return sResp.content_as_map()
 
+	def getCompletions(self, file, line, column, word):
+		if self.isConnected():
+			dataMap = {
+				"file": file,
+				"position": {
+					"line": line,
+					"column": column
+				},
+				"word": word
+			}
+			jsData = json.dumps(dataMap)
+			log.debug("get completions for "+jsData)
+			sResp = json_request(self.projectUrl()+"/completion", jsData)
+			return sResp.content_as_map()
+
 	def openDocumentation(self, model):
 		#TODO add project uri
 		if self.isConnected():
