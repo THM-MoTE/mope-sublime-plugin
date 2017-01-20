@@ -36,3 +36,7 @@ def read_project_file(rootDir, projectFile):
 			jsonStr = json.dumps(data, indent=2)
 			file.write(jsonStr)
 			return jsonStr
+
+def isModelica():
+	openedFile = sublime.active_window().active_view().file_name()
+	return openedFile.endswith(".mo")

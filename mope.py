@@ -40,17 +40,18 @@ class MopeCompileProjectCommand(sublime_plugin.WindowCommand):
 		self.window = window
 
 	def run(self):
-		print("WARNING compile project not implemented!")
-		openFile = self.window.active_view().file_name()
-		log.debug("opened file: "+openFile)
-		compilerErrors = mopeClient.compile(openFile)
-		infoPanelView = self.window.create_output_panel("mopeInfoPanel", True)
-		infoPanelView.set_read_only(False)
-		#edit the panel
-		infoPanelView.run_command("mope_display_errors", {"errors": compilerErrors})
-		infoPanelView.set_read_only(True)
-		self.window.run_command("show_panel", {"panel": "output.mopeInfoPanel"})
-		#self.window.run_command("hide_panel", {"panel": "output.mopeInfoPanel"})
+		if isModelica():
+			print("WARNING compile project not implemented!")
+			openFile = self.window.active_view().file_name()
+			log.debug("opened file: "+openFile)
+			compilerErrors = mopeClient.compile(openFile)
+			infoPanelView = self.window.create_output_panel("mopeInfoPanel", True)
+			infoPanelView.set_read_only(False)
+			#edit the panel
+			infoPanelView.run_command("mope_display_errors", {"errors": compilerErrors})
+			infoPanelView.set_read_only(True)
+			self.window.run_command("show_panel", {"panel": "output.mopeInfoPanel"})
+			#self.window.run_command("hide_panel", {"panel": "output.mopeInfoPanel"})
 
 class MopeDisplayErrorsCommand(sublime_plugin.TextCommand):
 	def run(self, edit, errors):
@@ -72,31 +73,33 @@ class MopeDisplayErrorsCommand(sublime_plugin.TextCommand):
 
 class MopeEvListener(sublime_plugin.EventListener):
 	def on_post_save_async(self, view):
-		#TODO check if it's a modelica file/restrict execution to Modelica scope
-		openFile = view.file_name()
-		log.debug("saved the file: "+openFile)
-		mopeClient.compile(openFile)
+		if isModelica():
+			openFile = view.file_name()
+			log.debug("saved the file: "+openFile)
+			mopeClient.compile(openFile)
 
 	def on_query_completions(self, view, prefix, locations):
 		#called when a completion is requested (Ctrl+Space)
-		return [
-			["Modelica\tThe std lib", "Modelica"],
-			["Electrical\tThe electrical lib", "Modelica"]
-		]
+		if isModelica():
+			return [
+				["Modelica\tThe std lib", "Modelica"],
+				["Electrical\tThe electrical lib", "Modelica"]
+			]
+		else:
+			return None
 
 class MopeOpenDocumentationCommand(sublime_plugin.WindowCommand):
 	def __init__(self, window):
 		self.window = window
 
 	def run(self):
-		print("WARNING open documentation not implemented!")
-		activeView = self.window.active_view()
-		cursorRegion = activeView.sel()[0]
-		wordRegion = activeView.word(cursorRegion)
-		wordStr = activeView.substr(wordRegion)
-		log.debug("found word "+wordStr)
-		mopeClient.openDocumentation(wordStr)
-		Modelica.Electrical.Basic
+		if isModelica():
+			activeView = self.window.active_view()
+			cursorRegion = activeView.sel()[0]
+			wordRegion = activeView.word(cursorRegion)
+			wordStr = activeView.substr(wordRegion)
+			log.debug("found word "+wordStr)
+			mopeClient.openDocumentation(wordStr)
 
 class MopeShowTypeCommand(MopeCommon):
 	def __init__(self, window):
