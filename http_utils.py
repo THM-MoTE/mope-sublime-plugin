@@ -14,6 +14,11 @@ def json_request(url, json):
 	resp = request.urlopen(requ)
 	return SimpleRequest(resp.getcode(), resp.read().decode())
 
+def get_request(url):
+	requ = request.Request(url, method="GET")
+	resp = request.urlopen(requ)
+	return SimpleRequest(resp.getcode(), resp.read().decode())
+
 def decode_json_response(response):
 	string = response.read().decode()
 	return json.loads(string)
