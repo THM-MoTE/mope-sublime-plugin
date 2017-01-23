@@ -157,8 +157,8 @@ class MopeGotoDefinitionCommand(sublime_plugin.TextCommand):
 			log.debug("go to "+symbol)
 			try:
 				fileWithLine = mopeClient.sourceOf(symbol)
-				self.view.window().open_file(fileWithLine["path"])
-				#fileWithLine["line"] #TODO scroll to beginning of line
+				newView = self.view.window().open_file(fileWithLine["path"])
+				newView.show_at_center(newView.text_point(fileWithLine["line"]-1, 0))
 			except request.URLError:
 				sublime.error_message("Source of %s not found!"%(symbol))
 		runc(fn)
