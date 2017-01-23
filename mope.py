@@ -153,3 +153,17 @@ class MopeShowTypeCommand(MopeCommon):
 
 	def run(self):
 		print("WARNING show type not implemented!")
+
+class MopeGotoDefinitionCommand(sublime_plugin.TextCommand):
+	def run(self, edit):
+		cursorRegion = self.view.sel()[0]
+		symbol = fullWordBelowCursor(self.view, cursorRegion)
+		def fn():
+			log.debug("go to "+symbol)
+			try:
+				fileWithLine = mopeClient.sourceOf(symbol)
+				self.view.window().open_file(fileWithLine["path"])
+				#fileWithLine["line"] #TODO scroll to beginning of line
+			except request.URLError:
+				sublime.error_message("Source of %s not found!"%(symbol))
+		runc(fn)

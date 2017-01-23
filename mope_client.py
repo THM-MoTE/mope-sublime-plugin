@@ -70,3 +70,8 @@ class MopeClient:
 			jsData = json.dumps({"path": file})
 			sResp = json_request(self.projectUrl()+"/checkModel", jsData)
 			return sResp.content
+
+	def sourceOf(self, symbol):
+		if self.isConnected():
+			uri = self.projectUrl()+"/declaration?class=%s"%(symbol)
+			return get_request(uri).content_as_map()
