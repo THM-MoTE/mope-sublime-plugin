@@ -127,11 +127,7 @@ class MopeOpenDocumentationCommand(sublime_plugin.WindowCommand):
 
 	def run(self):
 		if isModelica():
-			activeView = self.window.active_view()
-			cursorRegion = activeView.sel()[0]
-			wordRegion = activeView.word(cursorRegion)
-			wordStr = activeView.substr(wordRegion)
-			log.debug("found word "+wordStr)
+			wordStr = fullWordBelowCursor(self.window.active_view())
 			mopeClient.openDocumentation(wordStr)
 
 class MopeCheckModelCommand(sublime_plugin.WindowCommand):
