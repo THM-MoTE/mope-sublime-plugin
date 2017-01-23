@@ -44,5 +44,7 @@ def isModelica():
 def currentFile():
 	return sublime.active_window().active_view().file_name()
 
-def fullWordBelowCursor(view, pos):
-	return view.substr(view.expand_by_class(pos, sublime.CLASS_WORD_START, " ")).strip()
+def fullWordBelowCursor(view, pos=None):
+	cursorPos = pos if pos is not None else view.sel()[0]
+	expandedRegion = view.expand_by_class(cursorPos, sublime.CLASS_WORD_START, " ")
+	return view.substr(expandedRegion).strip()

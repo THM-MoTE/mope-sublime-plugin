@@ -156,8 +156,7 @@ class MopeShowTypeCommand(MopeCommon):
 
 class MopeGotoDefinitionCommand(sublime_plugin.TextCommand):
 	def run(self, edit):
-		cursorRegion = self.view.sel()[0]
-		symbol = fullWordBelowCursor(self.view, cursorRegion)
+		symbol = fullWordBelowCursor(self.view)
 		def fn():
 			log.debug("go to "+symbol)
 			try:
