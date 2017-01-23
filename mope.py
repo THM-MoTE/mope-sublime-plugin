@@ -106,11 +106,11 @@ class MopeEvListener(sublime_plugin.EventListener):
 		if isModelica():
 			for point in locations:
 				if view.match_selector(point, "source.modelica"):
-					#TODO match full prefix instead of given prefix; the given prefix only contains words until a '.' appears
-					row, col = view.rowcol(point) #0-based position
+					row, col = view.rowcol(point) #0-based cursor position
+					subexpr = view.substr(view.expand_by_class(point, sublime.CLASS_WORD_START, " ")).strip()
 					line = row+1
 					column = col+1
-					suggestions = mopeClient.getCompletions(currentFile(), line, column, prefix)
+					suggestions = mopeClient.getCompletions(currentFile(), line, column, subexpr)
 					return self.mapSuggestions(suggestions)
 		else:
 			return None
