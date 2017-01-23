@@ -43,3 +43,6 @@ def isModelica():
 
 def currentFile():
 	return sublime.active_window().active_view().file_name()
+
+def fullWordBelowCursor(view, pos):
+	return view.substr(view.expand_by_class(pos, sublime.CLASS_WORD_START, " ")).strip()

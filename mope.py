@@ -107,7 +107,7 @@ class MopeEvListener(sublime_plugin.EventListener):
 			for point in locations:
 				if view.match_selector(point, "source.modelica"):
 					row, col = view.rowcol(point) #0-based cursor position
-					subexpr = view.substr(view.expand_by_class(point, sublime.CLASS_WORD_START, " ")).strip()
+					subexpr = fullWordBelowCursor(view, point)
 					line = row+1
 					column = col+1
 					suggestions = mopeClient.getCompletions(currentFile(), line, column, subexpr)
