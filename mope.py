@@ -8,6 +8,7 @@ import os.path as path
 from .logger import *
 from .mope_common import *
 from .mope_client import *
+from .concurrency import *
 
 mopeProjectFile = "mope-project.json"
 mopeClient = MopeClient()
@@ -115,6 +116,7 @@ class MopeEvListener(sublime_plugin.EventListener):
 		# disconnect if user closes the window
 		if cmdName == "close_window":
 			mopeClient.disconnect()
+			mopeExecutor.shutdown(False)
 
 
 class MopeOpenDocumentationCommand(sublime_plugin.WindowCommand):
