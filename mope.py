@@ -134,6 +134,18 @@ class MopeOpenDocumentationCommand(sublime_plugin.WindowCommand):
 			log.debug("found word "+wordStr)
 			mopeClient.openDocumentation(wordStr)
 
+class MopeCheckModelCommand(sublime_plugin.WindowCommand):
+	def __init__(self, window):
+		self.window = window
+
+	def run(self):
+		if isModelica():
+			openedFile = currentFile()
+			def fn():
+				omcStr = mopeClient.checkModel(openedFile)
+				sublime.message_dialog(omcStr)
+			runc(fn)
+
 class MopeShowTypeCommand(MopeCommon):
 	def __init__(self, window):
 		super(MopeCommon, self).__init__(window)

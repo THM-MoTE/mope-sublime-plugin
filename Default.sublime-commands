@@ -19,5 +19,9 @@
 	  {
   	"caption": "Mope: Show Type",
   	"command": "mope_show_type"
-	}
+	},
+  {
+    "caption": "Mope: Check Model",
+    "command": "mope_check_model"
+   }
 ]

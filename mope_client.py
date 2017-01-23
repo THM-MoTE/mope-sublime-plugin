@@ -60,8 +60,13 @@ class MopeClient:
 			return sResp.content_as_map()
 
 	def openDocumentation(self, model):
-		#TODO add project uri
 		if self.isConnected():
 			uri = self.projectUrl()+"/doc?class=%s"%(model)
 			log.info("documentation for "+model+" at "+uri)
 			webbrowser.open(uri)
+
+	def checkModel(self, file):
+		if self.isConnected():
+			jsData = json.dumps({"path": file})
+			sResp = json_request(self.projectUrl()+"/checkModel", jsData)
+			return sResp.content
