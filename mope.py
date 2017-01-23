@@ -39,13 +39,15 @@ class MopeConnectCommand(sublime_plugin.WindowCommand):
 		else:
 			root = openedFolders[0]
 			projectFile = path.join(root, mopeProjectFile)
-			json = read_project_file(root, projectFile)
-			log.info("json: "+json)
-			try:
-				mopeClient.connect(self.interface, self.port, json)
-				sublime.message_dialog("Connected to %ss:%d"%(self.interface,self.port))
-			except request.URLError:
-				sublime.error_message("Couldn't connect to %s:%d!"%(self.interface, self.port))
+			def fn():
+				json = read_project_file(root, projectFile)
+				log.info("json: "+json)
+				try:
+					mopeClient.connect(self.interface, self.port, json)
+					sublime.message_dialog("Connected to %ss:%d"%(self.interface,self.port))
+				except request.URLError:
+					sublime.error_message("Couldn't connect to %s:%d!"%(self.interface, self.port))
+			runc(fn)
 
 class MopeDisconnectCommand(sublime_plugin.WindowCommand):
 	def __init__(self, window):
