@@ -142,13 +142,12 @@ class MopeCheckModelCommand(sublime_plugin.WindowCommand):
 				sublime.message_dialog(omcStr)
 			runc(fn)
 
-class MopeShowTypeCommand(MopeCommon):
+class MopeShowTypeCommand(sublime_plugin.WindowCommand):
 	def __init__(self, window):
-		super(MopeCommon, self).__init__(window)
-		pass
+		self.window = window
 
 	def run(self):
-		print("WARNING show type not implemented!")
+		log.error("WARNING show type not implemented!")
 
 class MopeGotoDefinitionCommand(sublime_plugin.TextCommand):
 	def run(self, edit):

@@ -8,20 +8,6 @@ import json
 
 from .logger import *
 
-class MopeCommon(sublime_plugin.WindowCommand):
-		def __init__(self, window):
-			self.settings = sublime.load_settings("Mope.sublime-settings")
-			self.interface = self.settings.get("interface")
-			self.port = self.settings.get("port")
-			print("common instantiated with %s:%d" % (self.interface, self.port))
-
-		def get_interface(self):
-			print("get interface called")
-			return ""
-
-		def get_port(self):
-			return self.port
-
 def read_project_file(rootDir, projectFile):
 	if path.exists(projectFile):
 		#read file and convert into map/json object
