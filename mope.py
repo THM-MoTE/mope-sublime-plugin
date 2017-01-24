@@ -130,6 +130,21 @@ class MopeOpenDocumentationCommand(sublime_plugin.WindowCommand):
 			wordStr = fullWordBelowCursor(self.window.active_view())
 			mopeClient.openDocumentation(wordStr)
 
+class MopeShowTypeCommand(sublime_plugin.WindowCommand):
+	def __init__(self, window):
+		self.window = window
+
+	def run(self):
+		if isModelica():
+			view = self.window.active_view()
+			cursorPos = view.sel()[0]
+			row, col = view.rowcol(cursorPos.a)
+			wordStr = fullWordBelowCursor(view)
+			respMap = mopeClient.typeOf(currentFile(), row+1,col+1,wordStr)
+			log.debug("show-type got returned: "+str(respMap))
+			#TODO display returned map inside outputpanel
+
+
 class MopeCheckModelCommand(sublime_plugin.WindowCommand):
 	def __init__(self, window):
 		self.window = window
@@ -141,13 +156,6 @@ class MopeCheckModelCommand(sublime_plugin.WindowCommand):
 				omcStr = mopeClient.checkModel(openedFile)
 				sublime.message_dialog(omcStr)
 			runc(fn)
-
-class MopeShowTypeCommand(sublime_plugin.WindowCommand):
-	def __init__(self, window):
-		self.window = window
-
-	def run(self):
-		log.error("WARNING show type not implemented!")
 
 class MopeGotoDefinitionCommand(sublime_plugin.TextCommand):
 	def run(self, edit):
