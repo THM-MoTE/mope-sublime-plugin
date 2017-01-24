@@ -111,7 +111,7 @@ class MopeEvListener(sublime_plugin.EventListener):
 					line = row+1
 					column = col+1
 					suggestions = mopeClient.getCompletions(currentFile(), line, column, subexpr)
-					return self.mapSuggestions(suggestions)
+					return (self.mapSuggestions(suggestions), sublime.INHIBIT_EXPLICIT_COMPLETIONS)
 		else:
 			return None
 	def on_window_command(self, window, cmdName,  args):
