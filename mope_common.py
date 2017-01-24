@@ -34,3 +34,13 @@ def fullWordBelowCursor(view, pos=None):
 	cursorPos = pos if pos is not None else view.sel()[0]
 	expandedRegion = view.expand_by_class(cursorPos, sublime.CLASS_WORD_START, " ")
 	return view.substr(expandedRegion).strip()
+
+# currently not used because sublime text API doesn't provide a listener for "user selects a completion" 
+def queryPopupContent(description, link=None):
+	if description is not None:
+		return "".join(["<div>",
+			"<span style=\"margin-right: 5px;\">this is the awesome documentation string</span>",
+			"<a href=\"#\">more</a>",
+		"</div>"])
+	else:
+		return None
