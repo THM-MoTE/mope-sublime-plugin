@@ -82,6 +82,11 @@ class MopeDisplayErrorsCommand(sublime_plugin.TextCommand):
 		errorLines = "\n".join(map(toStringMapping, errors))
 		infoPanelView.insert(edit,0,errorLines)
 
+class MopeDisplayTypeCommand(sublime_plugin.TextCommand):
+	def run(self, edit, typeMap):
+		infoPanelView = self.view
+		typeInfo = "[Type] {} {}".format(typeMap["type"], typeMap["name"]) + (" - {}".format(typeMap["comment"]) if typeMap["comment"] else "")
+		infoPanelView.insert(edit,0,typeInfo)
 
 class MopeEvListener(sublime_plugin.EventListener):
 	def on_post_save_async(self, view):
@@ -142,8 +147,12 @@ class MopeShowTypeCommand(sublime_plugin.WindowCommand):
 			wordStr = fullWordBelowCursor(view)
 			respMap = mopeClient.typeOf(currentFile(), row+1,col+1,wordStr)
 			log.debug("show-type got returned: "+str(respMap))
-			#TODO display returned map inside outputpanel
-
+			infoPanelView = self.window.create_output_panel("mopeInfoPanel", True)
+			infoPanelView.set_read_only(False)
+			#edit the panel
+			infoPanelView.run_command("mope_display_type", {"typeMap": respMap})
+			infoPanelView.set_read_only(True)
+			self.window.run_command("show_panel", {"panel": "output.mopeInfoPanel"})
 
 class MopeCheckModelCommand(sublime_plugin.WindowCommand):
 	def __init__(self, window):
