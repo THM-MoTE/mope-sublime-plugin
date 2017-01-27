@@ -1,0 +1,39 @@
+[[modelica-editor-sublime-text-client]]
+= Modelica | Editor Sublime Text Client
+
+A Sublime Text client plugin for communication with the
+https://github.com/THM-MoTE/mope-server/[Modelica | Editor] service
+process.
+
+[[requirements]]
+== Requirements
+
+* The https://packagecontrol.io/packages/Modelica[Modelica] syntax
+package
+
+[[feature-status]]
+== Feature status
+
+[[basics]]
+=== Basics
+
+* [x] `mope-project.json` file generation
+* [x] Connecting to the server
+* [x] Disconnecting to the server
+* [x] Compile on demand
+* [x] Compile after save
+* [ ] Compile scripts
+* [x] Check a model
+* [ ] Code completions
++
+partly implemented; completion works without any semantic hints
+* [ ] Stopping the server _going to be deprecated!_
+* [ ] Start server as sub process
+* [x] Go to documentation
+* [x] Go to definition
+* [x] Get type of a variable/property
+
+[[mope-beta-features]]
+=== MoPE BETA features
+
+* [ ] Open model in MoVE
