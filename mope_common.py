@@ -8,20 +8,6 @@ import json
 
 from .logger import *
 
-class MopeCommon(sublime_plugin.WindowCommand):
-		def __init__(self, window):
-			self.settings = sublime.load_settings("Mope.sublime-settings")
-			self.interface = self.settings.get("interface")
-			self.port = self.settings.get("port")
-			print("common instantiated with %s:%d" % (self.interface, self.port))
-
-		def get_interface(self):
-			print("get interface called")
-			return ""
-
-		def get_port(self):
-			return self.port
-
 def read_project_file(rootDir, projectFile):
 	if path.exists(projectFile):
 		#read file and convert into map/json object
@@ -48,3 +34,13 @@ def fullWordBelowCursor(view, pos=None):
 	cursorPos = pos if pos is not None else view.sel()[0]
 	expandedRegion = view.expand_by_class(cursorPos, sublime.CLASS_WORD_START, " ")
 	return view.substr(expandedRegion).strip()
+
+# currently not used because sublime text API doesn't provide a listener for "user selects a completion" 
+def queryPopupContent(description, link=None):
+	if description is not None:
+		return "".join(["<div>",
+			"<span style=\"margin-right: 5px;\">this is the awesome documentation string</span>",
+			"<a href=\"#\">more</a>",
+		"</div>"])
+	else:
+		return None

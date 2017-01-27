@@ -75,3 +75,16 @@ class MopeClient:
 		if self.isConnected():
 			uri = self.projectUrl()+"/declaration?class=%s"%(symbol)
 			return get_request(uri).content_as_map()
+
+	def typeOf(self, file, line, column, word):
+		if self.isConnected():
+			dataMap = {
+				"file": file,
+				"position": {
+					"line": line,
+					"column": column
+				},
+				"word": word
+			}
+			log.debug("src of "+str(dataMap))
+			return json_request(self.projectUrl()+"/typeOf", json.dumps(dataMap)).content_as_map()

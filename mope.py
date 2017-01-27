@@ -82,6 +82,11 @@ class MopeDisplayErrorsCommand(sublime_plugin.TextCommand):
 		errorLines = "\n".join(map(toStringMapping, errors))
 		infoPanelView.insert(edit,0,errorLines)
 
+class MopeDisplayTypeCommand(sublime_plugin.TextCommand):
+	def run(self, edit, typeMap):
+		infoPanelView = self.view
+		typeInfo = "[Type] {} {}".format(typeMap["type"], typeMap["name"]) + (" - {}".format(typeMap["comment"]) if typeMap["comment"] else "")
+		infoPanelView.insert(edit,0,typeInfo)
 
 class MopeEvListener(sublime_plugin.EventListener):
 	def on_post_save_async(self, view):
@@ -111,7 +116,7 @@ class MopeEvListener(sublime_plugin.EventListener):
 					line = row+1
 					column = col+1
 					suggestions = mopeClient.getCompletions(currentFile(), line, column, subexpr)
-					return self.mapSuggestions(suggestions)
+					return (self.mapSuggestions(suggestions), sublime.INHIBIT_EXPLICIT_COMPLETIONS)
 		else:
 			return None
 	def on_window_command(self, window, cmdName,  args):
@@ -130,6 +135,25 @@ class MopeOpenDocumentationCommand(sublime_plugin.WindowCommand):
 			wordStr = fullWordBelowCursor(self.window.active_view())
 			mopeClient.openDocumentation(wordStr)
 
+class MopeShowTypeCommand(sublime_plugin.WindowCommand):
+	def __init__(self, window):
+		self.window = window
+
+	def run(self):
+		if isModelica():
+			view = self.window.active_view()
+			cursorPos = view.sel()[0]
+			row, col = view.rowcol(cursorPos.a)
+			wordStr = fullWordBelowCursor(view)
+			respMap = mopeClient.typeOf(currentFile(), row+1,col+1,wordStr)
+			log.debug("show-type got returned: "+str(respMap))
+			infoPanelView = self.window.create_output_panel("mopeInfoPanel", True)
+			infoPanelView.set_read_only(False)
+			#edit the panel
+			infoPanelView.run_command("mope_display_type", {"typeMap": respMap})
+			infoPanelView.set_read_only(True)
+			self.window.run_command("show_panel", {"panel": "output.mopeInfoPanel"})
+
 class MopeCheckModelCommand(sublime_plugin.WindowCommand):
 	def __init__(self, window):
 		self.window = window
@@ -141,14 +165,6 @@ class MopeCheckModelCommand(sublime_plugin.WindowCommand):
 				omcStr = mopeClient.checkModel(openedFile)
 				sublime.message_dialog(omcStr)
 			runc(fn)
-
-class MopeShowTypeCommand(MopeCommon):
-	def __init__(self, window):
-		super(MopeCommon, self).__init__(window)
-		pass
-
-	def run(self):
-		print("WARNING show type not implemented!")
 
 class MopeGotoDefinitionCommand(sublime_plugin.TextCommand):
 	def run(self, edit):
