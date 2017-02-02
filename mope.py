@@ -12,6 +12,7 @@ from .concurrency import *
 
 mopeProjectFile = "mope-project.json"
 mopeClient = MopeClient()
+errorRegionsKey = "compile-errors"
 
 def compileAndDisplayErrors(window):
 	openFile = window.active_view().file_name()
@@ -23,7 +24,17 @@ def compileAndDisplayErrors(window):
 	infoPanelView.run_command("mope_display_errors", {"errors": compilerErrors})
 	infoPanelView.set_read_only(True)
 	window.run_command("show_panel", {"panel": "output.mopeInfoPanel"})
+	highlightLines(window.active_view(), [er["start"]["line"] for er in compilerErrors])
 	#self.window.run_command("hide_panel", {"panel": "output.mopeInfoPanel"})
+
+def highlightLines(view, lineNumbers):
+	def toRegion(lineNumber):
+			#(sublime uses a 0-based offset)
+		return sublime.Region(view.text_point(lineNumber-1, 0), view.text_point(lineNumber-1, 0))
+
+	view.erase_regions(errorRegionsKey)
+	#TODO find a scope which is always red
+	view.add_regions(errorRegionsKey, list(map(toRegion, lineNumbers)), "string", "dot")
 
 class MopeConnectCommand(sublime_plugin.WindowCommand):
 	def __init__(self, window):
