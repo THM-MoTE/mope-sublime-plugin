@@ -19,6 +19,7 @@ def compileAndDisplayErrors(window):
 	log.debug("opened file: "+openFile)
 	compilerErrors = mopeClient.compile(openFile)
 	infoPanelView = window.create_output_panel("mopeInfoPanel", True)
+	infoPanelView.settings().set("word_wrap", True)
 	infoPanelView.set_read_only(False)
 	#edit the panel
 	infoPanelView.run_command("mope_display_errors", {"errors": compilerErrors})
