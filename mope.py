@@ -34,7 +34,7 @@ def highlightLines(view, lineNumbers):
 
 	view.erase_regions(errorRegionsKey)
 	#TODO find a scope which is always red
-	view.add_regions(errorRegionsKey, list(map(toRegion, lineNumbers)), "string", "dot")
+	view.add_regions(errorRegionsKey, list(map(toRegion, lineNumbers)), "keyword", "dot")
 
 class MopeConnectCommand(sublime_plugin.WindowCommand):
 	def __init__(self, window):
