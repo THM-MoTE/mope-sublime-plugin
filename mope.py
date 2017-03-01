@@ -178,15 +178,21 @@ class MopeCheckModelCommand(sublime_plugin.WindowCommand):
 				sublime.message_dialog(omcStr)
 			runc(fn)
 
-class MopeGotoDefinitionCommand(sublime_plugin.TextCommand):
-	def run(self, edit):
-		symbol = fullWordBelowCursor(self.view)
+class MopeGotoDefinitionCommand(sublime_plugin.WindowCommand):
+	def __init__(self, window):
+		self.window = window
+
+	def run(self):
+		view = self.window.active_view()
+		fileStr = view.file_name()
+		cursorPos = view.sel()[0]
+		row, col = view.rowcol(cursorPos.a)
+		wordStr = fullWordBelowCursor(view)
 		def fn():
-			log.debug("go to "+symbol)
 			try:
-				fileWithLine = mopeClient.sourceOf(symbol)
-				newView = self.view.window().open_file(fileWithLine["path"])
-				newView.show_at_center(newView.text_point(fileWithLine["line"]-1, 0))
+				fileWithLine = mopeClient.sourceOf(fileStr, row+1, col+1, wordStr)
+				newView = self.window.open_file(fileWithLine['path'])
+				newView.show_at_center(newView.text_point(fileWithLine['line']-1, 0))
 			except request.URLError:
 				sublime.error_message("Source of %s not found!"%(symbol))
 		runc(fn)
